@@ -1,0 +1,39 @@
+﻿<div class="table-container">
+    <link href="~/css/employee.css" rel="stylesheet" />
+    <table>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Total Time Worked</th>
+                <th scope="col">Entry Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
+                var rowClass = employee.TotalTimeWorked < 100 ? "highlight" : "";
+                <tr class="@rowClass">
+                    <td>@employee.Name</td>
+                    <td>@employee.TotalTimeWorked.ToString("F2") hours</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton@employee.Name.Replace(" ", " -")" data-bs-toggle="dropdown" aria-expanded="false">
+                                View Notes
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton@employee.Name.Replace(" ", " -")">
+                                @foreach (var note in employee.EntryNotes.Split("; "))
+                                {
+                                    <li><a class="dropdown-item" href="#">@note</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="chart-container">
+    <img src="~/images/EmployeeWorkPieChart.png" alt="Employee Work Pie Chart" />
+</div>
+
