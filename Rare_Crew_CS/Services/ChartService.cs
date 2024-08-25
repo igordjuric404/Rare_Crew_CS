@@ -24,7 +24,7 @@ public class ChartService
     public void GeneratePieChart(List<Employee> employees, string outputFilePath)
     {
         // Ensure the output directory exists
-        string directory = Path.GetDirectoryName(outputFilePath);
+        string directory = Path.GetDirectoryName(outputFilePath) ?? throw new ArgumentException("Output file path is invalid.", nameof(outputFilePath));
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);

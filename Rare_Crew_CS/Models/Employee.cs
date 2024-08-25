@@ -2,8 +2,8 @@
 {
     public class Employee
     {
-        public string Name { get; set; }
+        public required string Name { get; set; }
         public double TotalTimeWorked { get; set; }
-        public string EntryNotes { get; set; }
+        public required string EntryNotes { get; set; }
     }
 }

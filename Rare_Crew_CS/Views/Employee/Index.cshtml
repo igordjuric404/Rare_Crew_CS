@@ -14,15 +14,16 @@
             @foreach (var employee in Model)
             {
                 var rowClass = employee.TotalTimeWorked < 100 ? "highlight" : "";
+                var dropdownId = $"dropdownMenuButton{employee.Name.Replace(" ", "-")}";
                 <tr class="@rowClass">
                     <td>@employee.Name</td>
                     <td>@employee.TotalTimeWorked.ToString("F2") hours</td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton@employee.Name.Replace(" ", " -")" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn dropdown-toggle" type="button" id="@dropdownId" data-bs-toggle="dropdown" aria-expanded="false">
                                 View Notes
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton@employee.Name.Replace(" ", " -")">
+                            <ul class="dropdown-menu" aria-labelledby="@dropdownId">
                                 @foreach (var note in employee.EntryNotes.Split("; "))
                                 {
                                     <li><a class="dropdown-item" href="#">@note</a></li>
@@ -35,6 +36,7 @@
         </tbody>
     </table>
 </div>
+
 <div class="chart-container">
-    <img src="~/images/EmployeeWorkPieChart.png" alt="Employee Work Pie Chart" />
+    <img src="~/images/EmployeeWorkPieChart.png" alt="Employee Work Pie Chart" class="img-fluid" />
 </div>

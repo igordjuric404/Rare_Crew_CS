@@ -1,10 +1,12 @@
+using Rare_Crew_CS.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpClient<EmployeeService>();
 builder.Services.AddControllersWithViews();
 builder.Logging.AddConsole();
-
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 var app = builder.Build();
 
 

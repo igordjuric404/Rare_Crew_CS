@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Rare_Crew_CS.Models;
 using System;
@@ -13,11 +14,11 @@ public class EmployeeService
     private readonly ILogger<EmployeeService> _logger;
     private readonly string _apiKey;
 
-    public EmployeeService(HttpClient httpClient, ILogger<EmployeeService> logger)
+    public EmployeeService(HttpClient httpClient, ILogger<EmployeeService> logger, IOptions<ApiSettings> apiSettings)
     {
         _httpClient = httpClient;
         _logger = logger;
-        _apiKey = "vO17RnE8vuzXzPJo5eaLLjXjmRW07law99QTD90zat9FfOQJKKUcgQ=="; // Hardcoded API key
+        _apiKey = apiSettings.Value.EmployeeServiceApiKey; // Retrieve API key from configuration
     }
 
     public async Task<List<Employee>> GetEmployeesAsync()
@@ -28,8 +29,14 @@ public class EmployeeService
         {
             var response = await _httpClient.GetStringAsync(url);
 
-            // Deserializes JSON response into a list of TimeEntry objects
-            var timeEntries = JsonConvert.DeserializeObject<List<TimeEntry>>(response);
+            // Deserializes JSON response into a list of EmployeeEntry objects
+            var timeEntries = JsonConvert.DeserializeObject<List<EmployeeEntry>>(response);
+
+            if (timeEntries == null)
+            {
+                _logger.LogWarning("No time entries were returned from the API.");
+                return new List<Employee>();
+            }
 
             // Processes the list to group entries by employee and calculate total hours
             var employees = timeEntries
@@ -58,16 +65,18 @@ public class EmployeeService
         }
     }
 
+
     private double CalculateTotalHours(DateTime start, DateTime end)
     {
         return (end - start).TotalHours;
     }
 }
 
-public class TimeEntry
+
+public class EmployeeEntry
 {
-    public string EmployeeName { get; set; }
-    public string StarTimeUtc { get; set; }
-    public string EndTimeUtc { get; set; }
-    public string EntryNotes { get; set; }
+    public required string EmployeeName { get; set; }
+    public required string StarTimeUtc { get; set; }
+    public required string EndTimeUtc { get; set; }
+    public required string EntryNotes { get; set; }
 }
